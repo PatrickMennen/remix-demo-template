@@ -1,5 +1,7 @@
+const figlet = require('figlet');
+
 const main = ({ rootDirectory }) => {
-  console.log("Hi, I am a custom stack");
+  figlet(`Remix Demo`);
 };
 
 module.exports = main;
