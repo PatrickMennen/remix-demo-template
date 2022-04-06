@@ -1,12 +1,18 @@
 const figlet = require('figlet');
 
 const main = ({ rootDirectory }) => {
-  console.log(
-    `${figlet(`Remix Demo`)}
+  figlet('Remix Demo', (err, data) => {
+    if (err) {
+      return;
+    }
 
-  Bootstrapped in: ${rootDirectory}
-  `.trim(),
-  );
+    console.log(
+      `${data}
+
+    Bootstrapped in: ${rootDirectory}
+    `.trim(),
+    );
+  });
 };
 
 module.exports = main;
