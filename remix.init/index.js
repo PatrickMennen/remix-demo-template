@@ -12,7 +12,7 @@ const main = async ({ rootDirectory }) => {
   const packageJSON = await fs.readFile(PACKAGE_JSON, 'utf-8');
   const readmeFile = await fs.readFile(README, 'utf-8');
 
-  const newPackageJSON = JSON.stringify(sort({ ...packageJSON, name: APP_NAME }));
+  const newPackageJSON = JSON.stringify(sort({ ...JSON.parse(packageJSON), name: APP_NAME }));
   await fs.writeFile(PACKAGE_JSON, newPackageJSON);
 };
 
