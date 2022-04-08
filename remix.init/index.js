@@ -33,6 +33,7 @@ const main = async ({ rootDirectory }) => {
     fs.writeFile(README, newReadme),
     fs.writeFile(DOTENV, dotEnv),
   ]);
+
   execSync(`npm run setup`, { stdio: 'inherit', cwd: rootDirectory });
 };
 

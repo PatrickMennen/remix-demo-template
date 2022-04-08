@@ -8,7 +8,7 @@
     "build": "remix build",
     "dev": "remix dev",
     "start": "remix-serve build",
-    "setup": "npx prisma generate --init && npx prisma db seed"
+    "setup": "npx prisma generate && npx prisma db seed"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
