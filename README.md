@@ -11,3 +11,4 @@ any modifications you make to the software will trigger an automatic refresh.
 ## Useful links
 [Remix Documentation](https://remix.run/docs)
 [Prisma Documentation](https://prisma.io)
+[Material-UI Remix integration](https://github.com/mui/material-ui/tree/master/examples/remix-with-typescript)
