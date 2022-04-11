@@ -11,7 +11,17 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  email    String @unique
+  id       String     @id @default(cuid())
+  email    String     @unique
   password String
+  Category Category[]
+}
+
+model Category {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name   String
+  userId String
+
+  @@unique([id, userId])
 }

@@ -10,9 +10,13 @@ export const login = async (username: string, password: string) => {
     },
   });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user) {
     throw new AuthenticationError();
   }
+
+  await bcrypt.compare(password, user.password).catch(() => {
+    throw new AuthenticationError();
+  });
 
   return user.id;
 };
