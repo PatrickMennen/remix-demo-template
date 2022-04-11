@@ -1,6 +1,6 @@
 import { withEmotionCache } from '@emotion/react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material';
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import React from 'react';
 import ClientStyleContext from './src/ClientStyleContext';
@@ -65,9 +65,9 @@ const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCa
 export default function App() {
   return (
     <Document>
-      <Layout>
-        <Outlet />
-      </Layout>
+      {/*<Layout>*/}
+      <Outlet />
+      {/*</Layout>*/}
     </Document>
   );
 }

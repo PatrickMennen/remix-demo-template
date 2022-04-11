@@ -20,3 +20,14 @@ export const login = async (username: string, password: string) => {
 
   return user.id;
 };
+
+export const registerUser = async (username: string, password: string) => {
+  const encryptedPassword = await bcrypt.hash(password, 10);
+
+  return prisma.user.create({
+    data: {
+      email: username,
+      password: encryptedPassword,
+    },
+  });
+};

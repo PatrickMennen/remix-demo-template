@@ -1,16 +1,7 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {
-  Alert,
-  Avatar,
-  Box,
-  Button,
-  Container, Grid,
-  Link,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Alert, Avatar, Box, Button, Container, Grid, TextField } from '@mui/material';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { Form, useActionData, useLoaderData } from '@remix-run/react';
+import { Form, Link, useActionData } from '@remix-run/react';
 import { z } from 'zod';
 import { login } from '~/api/login.server';
 import { commitSession, getSession } from '~/sessions';
@@ -55,13 +46,16 @@ type ActionData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get('Cookie'));
 
+  if (session.has('userId')) {
+    return redirect('/');
+  }
+
   return {
     userId: session.get('userId'),
   };
 };
 
 export default function LoginPage() {
-  const { userId } = useLoaderData();
   const loginAction = useActionData<ActionData>();
 
   return (
@@ -75,12 +69,9 @@ export default function LoginPage() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            {userId ? `Currently logged in as: ${userId}` : 'Sign in'}
-          </Typography>
           <Box>
             <TextField
               margin="normal"
@@ -110,9 +101,7 @@ export default function LoginPage() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <Link to={'/register'}>Don't have an account? Sign Up</Link>
               </Grid>
             </Grid>
           </Box>
