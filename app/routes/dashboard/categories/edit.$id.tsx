@@ -7,7 +7,7 @@ import { isValidCategory } from '~/utils/isValidCategory';
 import { ZodError, ZodIssue } from 'zod';
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import { Button, Stack, TextField } from '@mui/material';
+import { Alert, Button, Stack, TextField } from '@mui/material';
 
 type LoaderData = {
   category: Category;
@@ -80,16 +80,22 @@ export default function EditCategory() {
           id="category"
           defaultValue={category.name}
           name="category"
+          error={data !== undefined}
+          helperText={
+            data &&
+            data.validationErrors &&
+            data.validationErrors.map((e) => (
+              <span key={e.code}>
+                {e.message}
+                <br />
+              </span>
+            ))
+          }
         />
         {data && data.serverError && (
-          <p>Something went wrong on our end when trying to rename your category.</p>
-        )}
-        {data && data.validationErrors && (
-          <ul>
-            {data.validationErrors.map((e) => (
-              <li key={e.code}>{e.message}</li>
-            ))}
-          </ul>
+          <Alert severity="error">
+            Something went wrong on our end when trying to rename your category.
+          </Alert>
         )}
 
         <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
