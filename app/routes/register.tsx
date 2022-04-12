@@ -1,6 +1,6 @@
 import { Form, Link, useActionData } from '@remix-run/react';
 import { Alert, Button, Container, Stack, TextField, Typography } from '@mui/material';
-import { ActionFunction, redirect } from '@remix-run/node';
+import { ActionFunction, LoaderFunction, redirect } from '@remix-run/node';
 import { z, ZodError, ZodIssue } from 'zod';
 import { registerUser } from '~/api/login.server';
 import { commitSession, getSession } from '~/sessions';
@@ -63,6 +63,16 @@ export const action: ActionFunction = async ({ request }) => {
 
     return { serverError: true };
   }
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request.headers.get('Cookie'));
+
+  if (session.has('userId')) {
+    return redirect('/dashboard');
+  }
+
+  return null;
 };
 
 const getErrorsForField = (field: string, data?: ActionData) => {

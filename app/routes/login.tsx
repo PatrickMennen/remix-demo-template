@@ -1,5 +1,4 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Alert, Avatar, Box, Button, Container, Grid, Stack, TextField } from '@mui/material';
+import { Alert, Box, Button, Container, Stack, TextField } from '@mui/material';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
