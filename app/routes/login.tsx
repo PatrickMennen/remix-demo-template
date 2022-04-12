@@ -1,10 +1,11 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Alert, Avatar, Box, Button, Container, Grid, TextField } from '@mui/material';
+import { Alert, Avatar, Box, Button, Container, Grid, Stack, TextField } from '@mui/material';
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
-import { Form, Link, useActionData } from '@remix-run/react';
+import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 import { login } from '~/api/login.server';
 import { commitSession, getSession } from '~/sessions';
+import Typography from '@mui/material/Typography';
 
 const formData = z.object({
   username: z.string(),
@@ -41,6 +42,12 @@ export const action: ActionFunction = async ({ request }) => {
 
 type ActionData = {
   loginFailed: boolean;
+  accountCreated?: string;
+};
+
+type LoaderData = {
+  userId: string;
+  accountCreated?: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -50,28 +57,35 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect('/');
   }
 
-  return {
-    userId: session.get('userId'),
-  };
+  const accountCreated = session.get('accountCreated') ?? null;
+
+  return json(
+    {
+      userId: session.get('userId'),
+      accountCreated,
+    },
+    {
+      headers: {
+        'Set-Cookie': await commitSession(session),
+      },
+    },
+  );
 };
 
 export default function LoginPage() {
   const loginAction = useActionData<ActionData>();
+  const { accountCreated } = useLoaderData<LoaderData>();
 
   return (
     <Form method="post">
       <Container component="main" maxWidth="xs">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar>
-            <LockOutlinedIcon />
-          </Avatar>
+        <Stack spacing={2} sx={{ marginTop: 8 }}>
+          <Typography component={'h1'} variant={'h4'}>
+            Philips Password Manager
+          </Typography>
+
+          {accountCreated && <Alert severity="success">{accountCreated}</Alert>}
+
           <Box>
             <TextField
               margin="normal"
@@ -99,13 +113,9 @@ export default function LoginPage() {
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link to={'/register'}>Don't have an account? Sign Up</Link>
-              </Grid>
-            </Grid>
+            <Link to={'/register'}>Don't have an account? Sign Up</Link>
           </Box>
-        </Box>
+        </Stack>
       </Container>
     </Form>
   );

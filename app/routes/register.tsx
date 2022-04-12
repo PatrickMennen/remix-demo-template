@@ -1,10 +1,9 @@
-import { Form, useLoaderData, Link, useActionData } from '@remix-run/react';
-import { Alert, Avatar, Button, Container, Stack, TextField, Typography } from '@mui/material';
+import { Form, Link, useActionData } from '@remix-run/react';
+import { Alert, Button, Container, Stack, TextField, Typography } from '@mui/material';
 import { ActionFunction, redirect } from '@remix-run/node';
 import { z, ZodError, ZodIssue } from 'zod';
 import { registerUser } from '~/api/login.server';
 import { commitSession, getSession } from '~/sessions';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 type ActionData = {
@@ -37,7 +36,7 @@ export const action: ActionFunction = async ({ request }) => {
     await registerUser(registration.email, registration.password);
 
     session.flash(
-      'account_created',
+      'accountCreated',
       'Your account has been created. You can now login using your master password',
     );
 
@@ -62,7 +61,6 @@ export const action: ActionFunction = async ({ request }) => {
       };
     }
 
-    console.log(e);
     return { serverError: true };
   }
 };
