@@ -112,7 +112,9 @@ export default function LoginPage() {
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
-            <Link to={'/register'}>Don't have an account? Sign Up</Link>
+            <Link to={'/register'}>
+              <Button fullWidth>Don't have an account? Sign Up</Button>
+            </Link>
           </Box>
         </Stack>
       </Container>

@@ -4,7 +4,6 @@ import type { MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import React from 'react';
 import ClientStyleContext from './src/ClientStyleContext';
-import Layout from './src/Layout';
 import theme from './src/theme';
 
 export const meta: MetaFunction = () => ({
@@ -65,9 +64,7 @@ const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCa
 export default function App() {
   return (
     <Document>
-      {/*<Layout>*/}
       <Outlet />
-      {/*</Layout>*/}
     </Document>
   );
 }

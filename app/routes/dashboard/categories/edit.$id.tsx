@@ -6,6 +6,8 @@ import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
 import { isValidCategory } from '~/utils/isValidCategory';
 import { ZodError, ZodIssue } from 'zod';
 import React from 'react';
+import Typography from '@mui/material/Typography';
+import { Button, Stack, TextField } from '@mui/material';
 
 type LoaderData = {
   category: Category;
@@ -65,12 +67,20 @@ export default function EditCategory() {
   const data = useActionData<ActionData>();
 
   return (
-    <>
-      <h2>Editing {category.name}</h2>
-
-      <Form method="post">
+    <Form method="post">
+      <Stack spacing={2}>
+        <Typography variant="h5" component="h2">
+          Editing {category.name}
+        </Typography>
         <label htmlFor="category">Category:</label>
-        <input type="text" id="category" defaultValue={category.name} name="category" />
+        <TextField
+          label="Category:"
+          placeholder="Category"
+          type="text"
+          id="category"
+          defaultValue={category.name}
+          name="category"
+        />
         {data && data.serverError && (
           <p>Something went wrong on our end when trying to rename your category.</p>
         )}
@@ -81,9 +91,16 @@ export default function EditCategory() {
             ))}
           </ul>
         )}
-        <Link to="/dashboard/categories">Cancel</Link>{' '}
-        <input type="submit" name="action" value="Edit" />
-      </Form>
-    </>
+
+        <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
+          <Link to="/dashboard/categories">
+            <Button>Cancel</Button>
+          </Link>
+          <Button variant="contained" type="submit" name="action" value="Edit">
+            Edit
+          </Button>
+        </Stack>
+      </Stack>
+    </Form>
   );
 }

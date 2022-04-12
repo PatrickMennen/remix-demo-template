@@ -3,6 +3,19 @@ import { LoaderFunction } from '@remix-run/node';
 import { listCategoriesForUser } from '~/api/passwordManager.server';
 import { requireAuthentication } from '~/sessions';
 import { Link, useLoaderData } from '@remix-run/react';
+import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 
 type CategoriesOverviewData = {
   categories: Category[];
@@ -22,23 +35,49 @@ export default function CategoriesPage() {
   const { categories } = useLoaderData<CategoriesOverviewData>();
 
   return (
-    <>
-      <h2>Categories</h2>
-      <p>You have {categories.length} categories defined</p>
+    <Stack spacing={2}>
+      <Typography component="h2" variant="h5">
+        Categories
+      </Typography>
 
-      <ul>
-        {categories.map((category) => (
-          <li key={category.id}>
-            {category.name}
-            <span>
-              <Link to={`edit/${category.id}`}>Edit</Link> |{' '}
-              <Link to={`delete/${category.id}`}>Delete</Link>
-            </span>
-          </li>
-        ))}
-      </ul>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: '90%' }}>Category name</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {categories.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={2}>You currently have no categories defined</TableCell>
+              </TableRow>
+            )}
 
-      <Link to="new">New category</Link>
-    </>
+            {categories.map((category) => (
+              <TableRow key={category.id}>
+                <TableCell>{category.name}</TableCell>
+                <TableCell>
+                  <Stack spacing={2} direction="row">
+                    <Link to={`edit/${category.id}`}>
+                      <Button>Edit</Button>
+                    </Link>
+                    <Link to={`delete/${category.id}`}>
+                      <Button>Delete</Button>
+                    </Link>
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Box sx={{ textAlign: 'right' }}>
+        <Link to="new">
+          <Button variant="contained">New category</Button>
+        </Link>
+      </Box>
+    </Stack>
   );
 }

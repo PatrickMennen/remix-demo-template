@@ -4,6 +4,7 @@ import { requireAuthentication } from '~/sessions';
 import { Category } from '@prisma/client';
 import { deleteCategory, getCategoryDetails } from '~/api/passwordManager.server';
 import { z, ZodError } from 'zod';
+import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 
 type LoaderData = {
   category: Category;
@@ -62,24 +63,42 @@ export default function DeleteCategoryPage() {
   const actionData = useActionData<ActionData>();
 
   return (
-    <>
-      <h2>Removing &quot;{category.name}&quot;</h2>
-      <Form method="post">
-        <p>
-          Are you sure you want to remove the category <strong>{category.name}</strong>.
-        </p>
-        <p>
-          <strong>This action cannot be undone</strong>
-        </p>
-        <p>
-          To confirm deletion please enter <em>&quot;{category.name}&quot;</em> in the box below.
-        </p>
-        <input type="text" name="confirmation" />
-        {actionData && <p>{actionData.error}</p>}
+    <Form method="post">
+      <Stack spacing={2}>
+        <Typography component="h2" variant="h5">
+          Delete category
+        </Typography>
 
-        <Link to={'/dashboard/categories'}>Nope get me out of here</Link>
-        <input type="submit" value="Delete" />
-      </Form>
-    </>
+        <Typography>
+          Are you sure you want to remove the category <strong>{category.name}</strong>.
+        </Typography>
+
+        <Alert severity={'warning'}>
+          <strong>
+            This action cannot be undone, the category and all its contents will be removed from the
+            system.
+          </strong>
+        </Alert>
+
+        <Typography>
+          To confirm deletion please enter <em>&quot;{category.name}&quot;</em> in the box below.
+        </Typography>
+        <TextField
+          type="text"
+          name="confirmation"
+          error={actionData !== undefined}
+          helperText={actionData && actionData.error}
+        />
+
+        <Stack direction={'row'} justifyContent={'flex-end'}>
+          <Link to={'/dashboard/categories'}>
+            <Button>Nope get me out of here</Button>
+          </Link>
+          <Button type="submit" value="Delete" color={'error'} variant="contained">
+            Delete
+          </Button>
+        </Stack>
+      </Stack>
+    </Form>
   );
 }

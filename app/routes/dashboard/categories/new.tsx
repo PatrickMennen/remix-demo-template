@@ -5,6 +5,9 @@ import { requireAuthentication } from '~/sessions';
 import { createCategory } from '~/api/passwordManager.server';
 import React from 'react';
 import { isValidCategory } from '~/utils/isValidCategory';
+import { Alert, Button, Container, Stack, TextField } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { Box } from '@mui/system';
 
 type ActionData = {
   validationErrors?: ZodIssue[];
@@ -40,26 +43,42 @@ export default function NewCategoryPage() {
   const data = useActionData<ActionData>();
 
   return (
-    <>
-      <h2>New category</h2>
-      <Form method="post">
-        <label>Category name:</label>
-        <input type="text" name="category" />
+    <Form method="post">
+      <Stack spacing={2}>
+        <Typography component="h2" variant="h5">
+          New category
+        </Typography>
+
+        <TextField
+          label="Category name:"
+          type="text"
+          name="category"
+          placeholder={'Category name'}
+        />
 
         {data && data.serverError && (
-          <p>Something went wrong on our end when trying to create your category.</p>
+          <Alert severity="error">
+            Something went wrong on our end when trying to create your category.
+          </Alert>
         )}
 
         {data && data.validationErrors && (
-          <ul>
-            {data.validationErrors.map((e) => (
-              <li key={e.code}>{e.message}</li>
-            ))}
-          </ul>
+          <Alert severity="error">
+            Please correct the following errors:
+            <ul>
+              {data.validationErrors.map((e) => (
+                <li key={e.code}>{e.message}</li>
+              ))}
+            </ul>
+          </Alert>
         )}
 
-        <input type="submit" value="Create category" />
-      </Form>
-    </>
+        <Box sx={{ textAlign: 'right' }}>
+          <Button variant="contained" type="submit">
+            Create category
+          </Button>
+        </Box>
+      </Stack>
+    </Form>
   );
 }
