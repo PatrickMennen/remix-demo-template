@@ -1,4 +1,5 @@
 import { prisma } from '~/db';
+import { async } from 'rxjs';
 
 export class AccessDeniedError extends Error {}
 
@@ -57,6 +58,17 @@ export const deleteCategory = async (userId: string, id: string) => {
   return prisma.category.delete({
     where: {
       id,
+    },
+  });
+};
+
+export const getPasswordsForCategory = async (userId: string, categoryId: string) => {
+  await checkCategoryAccessForUser(userId, categoryId);
+
+  return prisma.password.findMany({
+    where: {
+      categoryId,
+      userId,
     },
   });
 };

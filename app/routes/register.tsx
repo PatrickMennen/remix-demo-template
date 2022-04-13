@@ -5,6 +5,8 @@ import { z, ZodError, ZodIssue } from 'zod';
 import { registerUser } from '~/api/login.server';
 import { commitSession, getSession } from '~/sessions';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { PasswordStrength } from '~/components/PasswordStrength';
+import React, { useCallback, useState } from 'react';
 
 type ActionData = {
   validationErrors?: ZodIssue[];
@@ -95,6 +97,13 @@ const getErrorsForField = (field: string, data?: ActionData) => {
 
 export default function RegisterPage() {
   const data = useActionData<ActionData>();
+  const [password, setPassword] = useState<string>('');
+  const changeHandler = useCallback(
+    (event: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      setPassword(event.currentTarget.value);
+    },
+    [setPassword],
+  );
 
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: 8 }}>
@@ -131,6 +140,8 @@ export default function RegisterPage() {
             fullWidth
             helperText={getErrorsForField('password', data)}
             error={getErrorsForField('password', data) !== null}
+            value={password}
+            onChange={changeHandler}
           />
 
           <TextField
@@ -142,8 +153,9 @@ export default function RegisterPage() {
             helperText={getErrorsForField('confirmation', data)}
             error={getErrorsForField('confirmation', data) !== null}
           />
+          <PasswordStrength password={password} verbose />
 
-          <Alert severity="warning">
+          <Alert severity="error">
             <Typography gutterBottom variant="caption" component="p">
               Please bare in mind that we <strong>cannot recover your master password</strong>.
             </Typography>
