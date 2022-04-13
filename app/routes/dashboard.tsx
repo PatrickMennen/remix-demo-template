@@ -3,7 +3,7 @@ import { LoaderFunction } from '@remix-run/node';
 import { requireAuthentication } from '~/sessions';
 import { listCategoriesForUser } from '~/api/passwordManager.server';
 import { Category } from '@prisma/client';
-import { AppBar, Box, Button, ListItem, Paper } from '@mui/material';
+import { AppBar, Box, Button, ListItem, Paper, Stack } from '@mui/material';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -49,11 +49,18 @@ export default function HomePage() {
       <Paper sx={{ gridColumn: '1 / 2' }} variant="outlined" square elevation={3}>
         <List>
           {categories.length === 0 ? (
-            <p>You have no categories.</p>
+            <ListItem>
+              <Stack spacing={2}>
+                <Typography>You have no categories</Typography>
+                <Link to={'new'}>
+                  <Button variant="contained">Create a category</Button>
+                </Link>
+              </Stack>
+            </ListItem>
           ) : (
             <List>
               {categories.map((c) => (
-                <NavLink to={`categories/${c.id}`}>
+                <NavLink to={`category/${c.id}`}>
                   {({ isActive }) => (
                     <ListItem key={c.id} selected={isActive}>
                       {c.name}

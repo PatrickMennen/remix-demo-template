@@ -1,5 +1,6 @@
 import { prisma } from '~/db';
-import { Category } from '@prisma/client';
+
+export class AccessDeniedError extends Error {}
 
 export const listCategoriesForUser = async (userId: string) =>
   prisma.category.findMany({
@@ -16,35 +17,46 @@ export const createCategory = async (userId: string, name: string) =>
     },
   });
 
-export const updateCategory = async (id: string, userId: string, newName: string) =>
-  prisma.category.update({
+const checkCategoryAccessForUser = async (userId: string, categoryId: string) => {
+  const count = await prisma.category.count({
     where: {
-      id_userId: {
-        userId,
-        id,
-      },
+      id: categoryId,
+      userId,
+    },
+  });
+
+  if (count === 0) {
+    throw new AccessDeniedError(`${userId} does not have access to ${categoryId}.`);
+  }
+};
+
+export const updateCategory = async (id: string, userId: string, newName: string) => {
+  await checkCategoryAccessForUser(userId, id);
+
+  return prisma.category.update({
+    where: {
+      id,
     },
     data: {
       name: newName,
     },
   });
+};
 
 export const getCategoryDetails = async (userId: string, id: string) =>
-  prisma.category.findUnique({
+  prisma.category.findFirst({
     where: {
-      id_userId: {
-        id,
-        userId,
-      },
+      id,
+      userId,
     },
   });
 
-export const deleteCategory = async (userId: string, id: string) =>
-  prisma.category.delete({
+export const deleteCategory = async (userId: string, id: string) => {
+  await checkCategoryAccessForUser(userId, id);
+
+  return prisma.category.delete({
     where: {
-      id_userId: {
-        userId,
-        id,
-      },
+      id,
     },
   });
+};

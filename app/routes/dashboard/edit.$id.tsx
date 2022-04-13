@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     await updateCategory(params.id, userId, categoryName);
 
-    return redirect('/dashboard/categories');
+    return redirect('/dashboard');
   } catch (e) {
     if (e instanceof ZodError) {
       return json({ validationErrors: e.issues, serverError: false }, 400);

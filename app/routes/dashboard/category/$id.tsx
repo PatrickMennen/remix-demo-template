@@ -26,7 +26,7 @@ export default function CategoryOverviewPage() {
   const { category } = useLoaderData<LoaderData>();
   return (
     <>
-      <Typography component="h2" variant="h5">
+      <Typography component="h2" variant="h5" gutterBottom>
         {category.name}
       </Typography>
 

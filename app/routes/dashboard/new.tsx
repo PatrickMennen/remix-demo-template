@@ -21,7 +21,7 @@ export const action: ActionFunction = async ({ request }) => {
   try {
     const category = isValidCategory.parse(formData.get('category'));
     await createCategory(userId, category);
-    return redirect('/dashboard/categories');
+    return redirect('/dashboard');
   } catch (e) {
     if (e instanceof ZodError) {
       return json(

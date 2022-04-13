@@ -41,14 +41,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   const category = await getCategoryDetails(userId, params.id);
 
   if (!category) {
-    return redirect('/dashboard/categories');
+    return redirect('/dashboard');
   }
   const canRemoveCategory = z.literal(category.name);
   try {
     canRemoveCategory.parse(formData.get('confirmation'));
     await deleteCategory(userId, category.id);
 
-    return redirect('/dashboard/categories');
+    return redirect('/dashboard');
   } catch (e) {
     if (e instanceof ZodError) {
       return json({ error: 'You did not enter the category name correctly.' }, 400);
