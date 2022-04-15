@@ -91,7 +91,7 @@ export default function DeleteCategoryPage() {
         />
 
         <Stack direction={'row'} justifyContent={'flex-end'}>
-          <Link to={'/dashboard/categories'}>
+          <Link to={'/dashboard'}>
             <Button>Nope get me out of here</Button>
           </Link>
           <Button type="submit" value="Delete" color={'error'} variant="contained">

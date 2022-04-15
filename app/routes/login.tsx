@@ -21,8 +21,7 @@ export const action: ActionFunction = async ({ request }) => {
       password: userInput.get('password'),
     });
 
-    const userId = await login(username, password);
-    session.set('userId', userId);
+    await login(username, password, session);
 
     return redirect('/', {
       headers: {

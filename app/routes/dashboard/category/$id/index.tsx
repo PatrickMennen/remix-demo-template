@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 import { LoaderFunction } from '@remix-run/node';
-import { requireAuthentication } from '~/sessions';
+import { getSession, requireAuthentication } from '~/sessions';
 import { getPasswordsForCategory } from '~/api/passwordManager.server';
 import { Link, useLoaderData } from '@remix-run/react';
 import {
@@ -15,14 +15,23 @@ import {
   TableRow,
 } from '@mui/material';
 import { Box } from '@mui/system';
+import { Password } from '@prisma/client';
+import { PasswordRow } from '~/components/PasswordRow';
+
+type LoaderData = {
+  passwords: Password[];
+};
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  await requireAuthentication(request);
+  const session = await getSession(request.headers.get('Cookie'));
+
   if (!params.id) {
     throw new Error('You cannot use this component without a category id.');
   }
 
   const userId = await requireAuthentication(request);
-  const passwords = await getPasswordsForCategory(userId, params.id);
+  const passwords = await getPasswordsForCategory(userId, params.id, session);
 
   return {
     passwords,
@@ -30,7 +39,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function PasswordOverviewPage() {
-  const { passwords } = useLoaderData<ReturnType<typeof loader>>();
+  const { passwords } = useLoaderData<LoaderData>();
 
   return (
     <Stack spacing={2}>
@@ -44,6 +53,7 @@ export default function PasswordOverviewPage() {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Username</TableCell>
+              <TableCell>Password</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -53,7 +63,15 @@ export default function PasswordOverviewPage() {
                 <TableCell colSpan={3}>No passwords found in this category</TableCell>
               </TableRow>
             ) : (
-              <TableRow>ARf</TableRow>
+              passwords.map((p) => (
+                <PasswordRow
+                  key={p.id}
+                  passwordId={p.id}
+                  username={p.username}
+                  password={p.password}
+                  name={p.name}
+                />
+              ))
             )}
           </TableBody>
         </Table>

@@ -2,10 +2,10 @@ import { Form, Link, useActionData } from '@remix-run/react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import { PasswordStrength } from '~/components/PasswordStrength';
 import React, { useCallback, useMemo, useState } from 'react';
-import { z, ZodError, ZodIssue } from 'zod';
+import { ZodError, ZodIssue } from 'zod';
 import { Box } from '@mui/system';
 import { ActionFunction, json, redirect } from '@remix-run/node';
-import { requireAuthentication } from '~/sessions';
+import { getSession, requireAuthentication } from '~/sessions';
 import queryString from 'query-string';
 import { addPasswordToCategory, passwordEntryValidator } from '~/api/passwordManager.server';
 
@@ -15,6 +15,8 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   const userId = await requireAuthentication(request);
+  const session = await getSession(request.headers.get('Cookie'));
+
   const formData = queryString.parse(await request.text());
   const formUris: string[] = formData['uris[]'] as string[];
 
@@ -26,7 +28,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       uris: formUris.filter((f) => f !== ''),
     });
 
-    await addPasswordToCategory(userId, params.id, entry);
+    await addPasswordToCategory(userId, params.id, entry, session);
     return redirect(`/category/${params.id}`);
   } catch (e) {
     if (e instanceof ZodError) {

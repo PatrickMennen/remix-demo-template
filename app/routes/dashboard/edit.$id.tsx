@@ -99,7 +99,7 @@ export default function EditCategory() {
         )}
 
         <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
-          <Link to="/dashboard/categories">
+          <Link to="/dashboard">
             <Button>Cancel</Button>
           </Link>
           <Button variant="contained" type="submit" name="action" value="Edit">

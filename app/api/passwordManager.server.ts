@@ -1,6 +1,8 @@
 import { prisma } from '~/db';
-import { async } from 'rxjs';
 import { z } from 'zod';
+import { Session } from '@remix-run/node';
+import aes from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 
 export class AccessDeniedError extends Error {}
 
@@ -63,15 +65,30 @@ export const deleteCategory = async (userId: string, id: string) => {
   });
 };
 
-export const getPasswordsForCategory = async (userId: string, categoryId: string) => {
+export const getPasswordsForCategory = async (
+  userId: string,
+  categoryId: string,
+  session: Session,
+) => {
   await checkCategoryAccessForUser(userId, categoryId);
 
-  return prisma.password.findMany({
+  const passwords = await prisma.password.findMany({
     where: {
       categoryId,
       userId,
     },
+    include: {
+      uris: true,
+    },
   });
+
+  const kek = session.get('kek');
+
+  return passwords.map((p) => ({
+    ...p,
+    username: aes.decrypt(p.username, kek).toString(CryptoJS.enc.Utf8),
+    password: aes.decrypt(p.password, kek).toString(CryptoJS.enc.Utf8),
+  }));
 };
 
 export const passwordEntryValidator = z.object({
@@ -90,16 +107,26 @@ type PasswordEntry = z.infer<typeof passwordEntryValidator>;
 export const addPasswordToCategory = async (
   userId: string,
   categoryId: string,
-  passwordEntry: PasswordEntry,
+  entry: PasswordEntry,
+  session: Session,
 ) => {
   await checkCategoryAccessForUser(userId, categoryId);
+
+  const kek = session.get('kek');
+
+  const encryptedUsername = aes.encrypt(entry.username, kek).toString();
+  const encryptedPassword = aes.encrypt(entry.password, kek).toString();
 
   return prisma.password.create({
     data: {
       userId,
       categoryId,
-      password: passwordEntry.password,
-      username: passwordEntry.username,
+      name: entry.name,
+      password: encryptedPassword,
+      username: encryptedUsername,
+      uris: {
+        create: entry.uris.map((uri) => ({ uri })),
+      },
     },
   });
 };

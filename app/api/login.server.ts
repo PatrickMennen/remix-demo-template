@@ -1,9 +1,14 @@
 import { prisma } from '~/db';
 import bcrypt from 'bcrypt';
+import { Session } from '@remix-run/node';
+import sha256 from 'crypto-js/sha256';
 
 class AuthenticationError extends Error {}
 
-export const login = async (username: string, password: string) => {
+const SUPER_SECRET_CIPHER =
+  'this is only exposed on the backend and used to create a more unique cipher';
+
+export const login = async (username: string, password: string, session: Session) => {
   const user = await prisma.user.findUnique({
     where: {
       email: username,
@@ -14,9 +19,12 @@ export const login = async (username: string, password: string) => {
     throw new AuthenticationError();
   }
 
-  await bcrypt.compare(password, user.password).catch(() => {
+  if (!(await bcrypt.compare(password, user.password))) {
     throw new AuthenticationError();
-  });
+  }
+
+  session.set('kek', sha256(`${user.password}${SUPER_SECRET_CIPHER}`).toString());
+  session.set('userId', user.id);
 
   return user.id;
 };
