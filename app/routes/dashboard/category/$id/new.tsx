@@ -29,7 +29,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
 
     await addPasswordToCategory(userId, params.id, entry, session);
-    return redirect(`/category/${params.id}`);
+    return redirect(`/dashboard/category/${params.id}`);
   } catch (e) {
     if (e instanceof ZodError) {
       return json(
@@ -84,6 +84,7 @@ export default function NewPasswordPage() {
           General details
         </Typography>
         <Typography>Please fill out all the required fields.</Typography>
+
         <TextField
           required
           name="name"
@@ -94,6 +95,7 @@ export default function NewPasswordPage() {
         <Typography variant="h6" component="h4">
           User details
         </Typography>
+
         <TextField
           name="username"
           label="Username:"
@@ -124,9 +126,12 @@ export default function NewPasswordPage() {
           />
         ))}
       </Stack>
+
       <Box sx={{ textAlign: 'right' }}>
         <Button onClick={addUriHandler}>Add another</Button>
       </Box>
+
+      <Typography>All done? Click Save to save your entry</Typography>
 
       <Stack component="aside" direction={'row'} justifyContent={'flex-end'}>
         <Link to={'../'}>

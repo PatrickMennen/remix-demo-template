@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { Chip, Stack, TableCell, TableRow } from '@mui/material';
+import { Button, Chip, Stack, TableCell, TableRow } from '@mui/material';
+import { Link } from '@remix-run/react';
 
 type PasswordRowProps = {
   username: string;
@@ -8,7 +9,12 @@ type PasswordRowProps = {
   passwordId: string;
 };
 
-export const PasswordRow: React.FC<PasswordRowProps> = ({ username, password, name }) => {
+export const PasswordRow: React.FC<PasswordRowProps> = ({
+  username,
+  password,
+  name,
+  passwordId,
+}) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const togglePasswordVisibility = useCallback(
     () => setShowPassword(!showPassword),
@@ -20,7 +26,15 @@ export const PasswordRow: React.FC<PasswordRowProps> = ({ username, password, na
       <TableCell>{name}</TableCell>
       <TableCell>{username}</TableCell>
       <TableCell onClick={togglePasswordVisibility}>
-        {showPassword ? <Chip label={'Password hidden, click to show'} /> : password}
+        {showPassword ? password : <Chip label={'Password hidden, click to show'} />}
+      </TableCell>
+      <TableCell>
+        <Link to={`delete/${passwordId}`}>
+          <Button color={'error'}>Delete</Button>
+        </Link>
+        <Link to={`edit/${passwordId}`}>
+          <Button>Edit</Button>
+        </Link>
       </TableCell>
     </TableRow>
   );
