@@ -1,5 +1,6 @@
 import { prisma } from '~/db';
 import { async } from 'rxjs';
+import { z } from 'zod';
 
 export class AccessDeniedError extends Error {}
 
@@ -69,6 +70,36 @@ export const getPasswordsForCategory = async (userId: string, categoryId: string
     where: {
       categoryId,
       userId,
+    },
+  });
+};
+
+export const passwordEntryValidator = z.object({
+  name: z.string(),
+  username: z.string(),
+  password: z.string(),
+  uris: z
+    .string()
+    .url('The url you entered is invalid.')
+    .array()
+    .min(1, 'Please provide at least one URI'),
+});
+
+type PasswordEntry = z.infer<typeof passwordEntryValidator>;
+
+export const addPasswordToCategory = async (
+  userId: string,
+  categoryId: string,
+  passwordEntry: PasswordEntry,
+) => {
+  await checkCategoryAccessForUser(userId, categoryId);
+
+  return prisma.password.create({
+    data: {
+      userId,
+      categoryId,
+      password: passwordEntry.password,
+      username: passwordEntry.username,
     },
   });
 };

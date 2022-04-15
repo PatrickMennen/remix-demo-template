@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   };
 };
 
-export default function HomePage() {
+export default function DashboardPage() {
   const { categories } = useLoaderData<LoaderData>();
   return (
     <Box
@@ -46,7 +46,7 @@ export default function HomePage() {
           </Toolbar>
         </AppBar>
       </Box>
-      <Paper sx={{ gridColumn: '1 / 2' }} variant="outlined" square elevation={3}>
+      <Paper sx={{ gridColumn: '1 / 2' }} square elevation={3}>
         <List>
           {categories.length === 0 ? (
             <ListItem>
@@ -60,7 +60,7 @@ export default function HomePage() {
           ) : (
             <List>
               {categories.map((c) => (
-                <NavLink to={`category/${c.id}`}>
+                <NavLink to={`category/${c.id}`} key={c.id}>
                   {({ isActive }) => (
                     <ListItem key={c.id} selected={isActive}>
                       {c.name}
