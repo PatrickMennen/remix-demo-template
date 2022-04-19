@@ -1,8 +1,8 @@
 import { Link, NavLink, Outlet, useLoaderData } from '@remix-run/react';
-import { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { requireAuthentication } from '~/sessions';
 import { listCategoriesForUser } from '~/api/passwordManager.server';
-import { Category } from '@prisma/client';
+import type { Category } from '@prisma/client';
 import { AppBar, Box, Button, ListItem, Paper, Stack } from '@mui/material';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';

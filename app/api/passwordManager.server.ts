@@ -1,6 +1,6 @@
 import { prisma } from '~/db';
 import { z } from 'zod';
-import { Session } from '@remix-run/node';
+import type { Session } from '@remix-run/node';
 import aes from 'crypto-js/aes';
 import CryptoJS from 'crypto-js';
 

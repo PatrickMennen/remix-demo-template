@@ -1,7 +1,7 @@
-import { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { getCategoryDetails } from '~/api/passwordManager.server';
 import { requireAuthentication } from '~/sessions';
-import { Category } from '@prisma/client';
+import type { Category } from '@prisma/client';
 import { Outlet, useLoaderData } from '@remix-run/react';
 import Typography from '@mui/material/Typography';
 

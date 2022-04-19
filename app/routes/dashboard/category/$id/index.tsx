@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography';
-import { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { getSession, requireAuthentication } from '~/sessions';
 import { getPasswordsForCategory } from '~/api/passwordManager.server';
 import { Link, useLoaderData } from '@remix-run/react';
@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { Password } from '@prisma/client';
+import type { Password } from '@prisma/client';
 import { PasswordRow } from '~/components/PasswordRow';
 
 type LoaderData = {

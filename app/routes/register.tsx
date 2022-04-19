@@ -1,7 +1,9 @@
 import { Form, Link, useActionData } from '@remix-run/react';
 import { Alert, Button, Container, Stack, TextField, Typography } from '@mui/material';
-import { ActionFunction, LoaderFunction, redirect } from '@remix-run/node';
-import { z, ZodError, ZodIssue } from 'zod';
+import type { ActionFunction, LoaderFunction} from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import type { ZodIssue } from 'zod';
+import { z, ZodError } from 'zod';
 import { registerUser } from '~/api/login.server';
 import { commitSession, getSession } from '~/sessions';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';

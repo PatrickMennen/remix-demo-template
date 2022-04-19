@@ -1,6 +1,8 @@
 import { Form, useActionData } from '@remix-run/react';
-import { ActionFunction, json, redirect } from '@remix-run/node';
-import { ZodError, ZodIssue } from 'zod';
+import type { ActionFunction} from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import type { ZodIssue } from 'zod';
+import { ZodError } from 'zod';
 import { requireAuthentication } from '~/sessions';
 import { createCategory } from '~/api/passwordManager.server';
 import React from 'react';
