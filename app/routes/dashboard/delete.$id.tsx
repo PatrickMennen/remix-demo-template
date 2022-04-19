@@ -54,6 +54,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       return json({ error: 'You did not enter the category name correctly.' }, 400);
     }
 
+    console.log(e);
     return json({ error: 'Something went wrong on our side, please try again later' }, 500);
   }
 };
@@ -90,7 +91,7 @@ export default function DeleteCategoryPage() {
           helperText={actionData && actionData.error}
         />
 
-        <Stack direction={'row'} justifyContent={'flex-end'}>
+        <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
           <Link to={'/dashboard'}>
             <Button>Nope get me out of here</Button>
           </Link>

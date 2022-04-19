@@ -55,12 +55,14 @@ export const getCategoryDetails = async (userId: string, id: string) =>
     },
   });
 
-export const deleteCategory = async (userId: string, id: string) => {
-  await checkCategoryAccessForUser(userId, id);
+export const deleteCategory = async (userId: string, categoryId: string) => {
+  await checkCategoryAccessForUser(userId, categoryId);
+
+  console.log(categoryId, userId);
 
   return prisma.category.delete({
     where: {
-      id,
+      id: categoryId,
     },
   });
 };
@@ -104,6 +106,17 @@ export const passwordEntryValidator = z.object({
 
 type PasswordEntry = z.infer<typeof passwordEntryValidator>;
 
+const encryptUsernameAndPassword = (username: string, password: string, session: Session) => {
+  const kek = session.get('kek');
+  const encryptedUsername = aes.encrypt(username, kek).toString();
+  const encryptedPassword = aes.encrypt(password, kek).toString();
+
+  return {
+    encryptedPassword,
+    encryptedUsername,
+  };
+};
+
 export const addPasswordToCategory = async (
   userId: string,
   categoryId: string,
@@ -112,10 +125,11 @@ export const addPasswordToCategory = async (
 ) => {
   await checkCategoryAccessForUser(userId, categoryId);
 
-  const kek = session.get('kek');
-
-  const encryptedUsername = aes.encrypt(entry.username, kek).toString();
-  const encryptedPassword = aes.encrypt(entry.password, kek).toString();
+  const { encryptedPassword, encryptedUsername } = encryptUsernameAndPassword(
+    entry.username,
+    entry.password,
+    session,
+  );
 
   return prisma.password.create({
     data: {
@@ -129,4 +143,59 @@ export const addPasswordToCategory = async (
       },
     },
   });
+};
+
+const userHasAccessToPassword = async (userId: string, passwordId: string) => {
+  const count = await prisma.password.count({
+    where: {
+      userId,
+      id: passwordId,
+    },
+  });
+
+  if (count === 0) {
+    throw new AccessDeniedError();
+  }
+};
+
+export const editPassword = async (
+  userId: string,
+  passwordId: string,
+  fields: PasswordEntry,
+  session: Session,
+) => {
+  await userHasAccessToPassword(userId, passwordId);
+
+  const { encryptedPassword, encryptedUsername } = encryptUsernameAndPassword(
+    fields.username,
+    fields.password,
+    session,
+  );
+
+  // Run as a transaction, if either action fails, rollback
+  return prisma.$transaction([
+    prisma.uri.deleteMany({
+      where: {
+        passwordId,
+      },
+    }),
+
+    prisma.password.update({
+      where: {
+        id: passwordId,
+      },
+      data: {
+        name: fields.name,
+        username: encryptedUsername,
+        password: encryptedPassword,
+        uris: { create: fields.uris.map((uri) => ({ uri })) },
+      },
+    }),
+  ]);
+};
+
+export const deletePassword = async (userId: string, passwordId: string) => {
+  await userHasAccessToPassword(userId, passwordId);
+
+  return prisma.password.delete({ where: { id: passwordId } });
 };
