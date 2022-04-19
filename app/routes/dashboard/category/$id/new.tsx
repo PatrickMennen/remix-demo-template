@@ -69,7 +69,7 @@ export default function NewPasswordPage() {
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setPassword(event.currentTarget.value);
     },
-    [setPassword, password],
+    [setPassword],
   );
 
   const addUriHandler = useCallback(() => {
