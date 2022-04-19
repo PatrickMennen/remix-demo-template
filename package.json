@@ -28,8 +28,8 @@
     "crypto-js": "^4.1.1",
     "prisma": "^3.12.0",
     "query-string": "^7.1.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "zod": "^3.14.4",
     "zxcvbn": "^4.4.2"
   },
