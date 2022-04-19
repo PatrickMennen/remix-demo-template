@@ -7,6 +7,8 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
+    "lint": "eslint app/**/*.{js,jsx,ts,tsx}",
+    "lint:fix": "eslint app/**/*.{js,jsx,ts,tsx} --fix",
     "start": "remix-serve build",
     "setup": "npx prisma generate && npx prisma db seed",
     "test": "vitest"

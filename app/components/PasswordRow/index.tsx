@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Chip, Stack, TableCell, TableRow } from '@mui/material';
+import { Button, Chip, TableCell, TableRow } from '@mui/material';
 import { Link } from '@remix-run/react';
 
 type PasswordRowProps = {

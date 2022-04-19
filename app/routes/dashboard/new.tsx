@@ -1,11 +1,11 @@
 import { Form, useActionData } from '@remix-run/react';
 import { ActionFunction, json, redirect } from '@remix-run/node';
-import { z, ZodError, ZodIssue } from 'zod';
+import { ZodError, ZodIssue } from 'zod';
 import { requireAuthentication } from '~/sessions';
 import { createCategory } from '~/api/passwordManager.server';
 import React from 'react';
 import { isValidCategory } from '~/utils/isValidCategory';
-import { Alert, Button, Container, Stack, TextField } from '@mui/material';
+import { Alert, Button, Stack, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 
