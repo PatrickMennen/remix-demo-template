@@ -2,9 +2,8 @@ import Typography from '@mui/material/Typography';
 import { LoaderFunction } from '@remix-run/node';
 import { getSession, requireAuthentication } from '~/sessions';
 import { getPasswordsForCategory } from '~/api/passwordManager.server';
-import { Link, useCatch, useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import {
-  Alert,
   Button,
   Paper,
   Stack,
