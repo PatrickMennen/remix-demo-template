@@ -9,7 +9,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { CacheProvider } from '@emotion/react';
 import createEmotionServer from '@emotion/server/create-instance';
-import { EntryContext } from '@remix-run/node';
+import type { EntryContext } from '@remix-run/node';
 
 export default function handleRequest(
   request: Request,

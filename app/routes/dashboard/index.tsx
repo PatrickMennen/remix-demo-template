@@ -1,5 +1,5 @@
-import { Category } from '@prisma/client';
-import { LoaderFunction } from '@remix-run/node';
+import type { Category } from '@prisma/client';
+import type { LoaderFunction } from '@remix-run/node';
 import { listCategoriesForUser } from '~/api/passwordManager.server';
 import { requireAuthentication } from '~/sessions';
 import { Link, useLoaderData } from '@remix-run/react';

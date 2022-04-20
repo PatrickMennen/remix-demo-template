@@ -1,5 +1,6 @@
 import { Alert, Box, Button, Container, Stack, TextField } from '@mui/material';
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction} from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
 import { z } from 'zod';
 import { login } from '~/api/login.server';

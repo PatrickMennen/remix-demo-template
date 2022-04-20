@@ -1,7 +1,8 @@
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction} from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { requireAuthentication } from '~/sessions';
-import { Category } from '@prisma/client';
+import type { Category } from '@prisma/client';
 import { deleteCategory, getCategoryDetails } from '~/api/passwordManager.server';
 import { z, ZodError } from 'zod';
 import { Alert, Button, Stack, TextField, Typography } from '@mui/material';

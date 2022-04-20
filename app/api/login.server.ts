@@ -1,6 +1,6 @@
 import { prisma } from '~/db';
 import bcrypt from 'bcrypt';
-import { Session } from '@remix-run/node';
+import type { Session } from '@remix-run/node';
 import sha256 from 'crypto-js/sha256';
 
 class AuthenticationError extends Error {}

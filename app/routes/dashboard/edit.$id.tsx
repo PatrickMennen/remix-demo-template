@@ -1,10 +1,12 @@
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node';
+import type { ActionFunction, LoaderFunction} from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { requireAuthentication } from '~/sessions';
 import { getCategoryDetails, updateCategory } from '~/api/passwordManager.server';
-import { Category } from '@prisma/client';
+import type { Category } from '@prisma/client';
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react';
 import { isValidCategory } from '~/utils/isValidCategory';
-import { ZodError, ZodIssue } from 'zod';
+import type { ZodIssue } from 'zod';
+import { ZodError } from 'zod';
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { Alert, Button, Stack, TextField } from '@mui/material';
